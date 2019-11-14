@@ -1,0 +1,53 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Metadata": {        
+    },
+    "Resources": {
+        "S3Bucket": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+                "BucketName": {
+                    
+                },
+                "BucketEncryption": {
+                    "ServerSideEncryptionConfiguration": [
+                        {
+                            "ServerSideEncryptionByDefault": {
+                                "SSEAlgorithm": "AES256"
+                            }
+                        }
+                    ]
+                }
+            },
+            "Metadata": {                
+            }
+        }
+    },
+    "Parameters": {
+        "product": {
+            "Type": "String",
+            "Default": "s3.satie.io",
+            "Description": "Product Name"
+        },
+        "environment": {
+            "Type": "String",
+            "Default": "dev",
+            "AllowedValues": [
+                "dev",
+                "test",
+                "stage",
+                "production"
+            ],
+            "Description": "Deployment environment"
+        },
+        "region": {
+            "Type": "String",
+            "Default": "us-east-1",
+            "AllowedValues": [
+                "us-east-1",
+                "us-east-2"
+            ],
+            "Description": "Deployment region"
+        }
+    }
+}

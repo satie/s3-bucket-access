@@ -1,0 +1,203 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Metadata": {},
+    "Resources": {
+        "BucketReadOnlyUserKey": {
+            "Type": "AWS::IAM::AccessKey",
+            "Properties": {
+                "UserName": {
+                    "Ref": "BucketReadOnlyUser"
+                }
+            },
+            "Metadata": {}
+        },
+        "BucketReadOnlyUser": {
+            "Type": "AWS::IAM::User",
+            "Properties": {},
+            "Metadata": {}
+        },
+        "BucketReadWriteUserKey": {
+            "Type": "AWS::IAM::AccessKey",
+            "Properties": {
+                "UserName": {
+                    "Ref": "BucketReadWriteUser"
+                }
+            },
+            "Metadata": {}
+        },
+        "BucketReadWriteUser": {
+            "Type": "AWS::IAM::User",
+            "Properties": {},
+            "Metadata": {}
+        },
+        "S3BucketPolicy": {
+            "Type": "AWS::S3::BucketPolicy",
+            "Properties": {
+                "Bucket": {
+                    "Ref": "S3Bucket"
+                },
+                "PolicyDocument": {
+                    "Statement": [
+                        {
+                            "Sid": "Stmt1573262690991",
+                            "Action": [
+                                "s3:ListBucket"
+                            ],
+                            "Effect": "Allow",
+                            "Resource": [
+                                {
+                                    "Fn::GetAtt": [
+                                        "S3Bucket",
+                                        "Arn"
+                                    ]
+                                },
+                                {
+                                    "Fn::Sub": [
+                                        "${BucketArn}/*",
+                                        {
+                                            "BucketArn": {
+                                                "Fn::GetAtt": [
+                                                    "S3Bucket",
+                                                    "Arn"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            ],
+                            "Principal": {
+                                "AWS": [
+                                    {
+                                        "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:user/${BucketReadOnlyUser}"
+                                    },
+                                    {
+                                        "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:user/${BucketReadWriteUser}"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "Sid": "Stmt1573262719634",
+                            "Action": [
+                                "s3:PutObject"
+                            ],
+                            "Effect": "Allow",
+                            "Resource": [
+                                {
+                                    "Fn::GetAtt": [
+                                        "S3Bucket",
+                                        "Arn"
+                                    ]
+                                },
+                                {
+                                    "Fn::Sub": [
+                                        "${BucketArn}/*",
+                                        {
+                                            "BucketArn": {
+                                                "Fn::GetAtt": [
+                                                    "S3Bucket",
+                                                    "Arn"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            ],
+                            "Principal": {
+                                "AWS": [
+                                    {
+                                        "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:user/${BucketReadWriteUser}"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            "Metadata": {}
+        },
+        "S3Bucket": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+                "BucketName": {
+                    "Fn::Sub": "${AWS::StackName}-${product}-${environment}"
+                },
+                "BucketEncryption": {
+                    "ServerSideEncryptionConfiguration": [
+                        {
+                            "ServerSideEncryptionByDefault": {
+                                "SSEAlgorithm": "AES256"
+                            }
+                        }
+                    ]
+                }
+            },
+            "Metadata": {}
+        }
+    },
+    "Parameters": {
+        "product": {
+            "Type": "String",
+            "Default": "s3.satie.io",
+            "Description": "Product Name"
+        },
+        "environment": {
+            "Type": "String",
+            "Default": "dev",
+            "AllowedValues": [
+                "dev",
+                "test",
+                "stage",
+                "production"
+            ],
+            "Description": "Deployment environment"
+        },
+        "region": {
+            "Type": "String",
+            "Default": "us-east-1",
+            "AllowedValues": [
+                "us-east-1",
+                "us-east-2"
+            ],
+            "Description": "Deployment region"
+        }
+    },
+    "Outputs": {
+        "BucketName": {
+            "Description": "S3 bucket",
+            "Value": {
+                "Ref": "S3Bucket"
+            }
+        },
+        "ReadOnlyUserAccessKey": {
+            "Description": "Access Key for user with read-only permissions",
+            "Value": {
+                "Ref": "BucketReadOnlyUserKey"
+            }
+        },
+        "ReadOnlyUserSecretKey": {
+            "Description": "Secret Key for user with read-only permissions",
+            "Value": {
+                "Fn::GetAtt": [
+                    "BucketReadOnlyUserKey",
+                    "SecretAccessKey"
+                ]
+            }
+        },
+        "ReadWriteUserAccessKey": {
+            "Description": "Access Key for user with read-write permissions",
+            "Value": {
+                "Ref": "BucketReadWriteUserKey"
+            }
+        },
+        "ReadWriteUserSecretKey": {
+            "Description": "Secret Key for user with read-only permissions",
+            "Value": {
+                "Fn::GetAtt": [
+                    "BucketReadWriteUserKey",
+                    "SecretAccessKey"
+                ]
+            }
+        }
+    }
+}
