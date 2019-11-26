@@ -8,13 +8,32 @@
                 "UserName": {
                     "Ref": "BucketReadOnlyUser"
                 }
-            },
-            "Metadata": {}
+            }
         },
         "BucketReadOnlyUser": {
             "Type": "AWS::IAM::User",
-            "Properties": {},
-            "Metadata": {}
+            "Properties": {
+                "Tags": [
+                    {
+                        "Key": "Product",
+                        "Value": {
+                            "Ref": "product"
+                        }
+                    },
+                    {
+                        "Key": "Environment",
+                        "Value": {
+                            "Ref": "environment"
+                        }
+                    },
+                    {
+                        "Key": "Stack",
+                        "Value": {
+                            "Ref": "AWS::StackName"
+                        }
+                    }
+                ]
+            }
         },
         "BucketReadWriteUserKey": {
             "Type": "AWS::IAM::AccessKey",
@@ -22,13 +41,32 @@
                 "UserName": {
                     "Ref": "BucketReadWriteUser"
                 }
-            },
-            "Metadata": {}
+            }
         },
         "BucketReadWriteUser": {
             "Type": "AWS::IAM::User",
-            "Properties": {},
-            "Metadata": {}
+            "Properties": {
+                "Tags": [
+                    {
+                        "Key": "Product",
+                        "Value": {
+                            "Ref": "product"
+                        }
+                    },
+                    {
+                        "Key": "Environment",
+                        "Value": {
+                            "Ref": "environment"
+                        }
+                    },
+                    {
+                        "Key": "Stack",
+                        "Value": {
+                            "Ref": "AWS::StackName"
+                        }
+                    }
+                ]
+            }
         },
         "S3BucketPolicy": {
             "Type": "AWS::S3::BucketPolicy",
@@ -113,8 +151,7 @@
                         }
                     ]
                 }
-            },
-            "Metadata": {}
+            }
         },
         "S3Bucket": {
             "Type": "AWS::S3::Bucket",
@@ -130,9 +167,28 @@
                             }
                         }
                     ]
-                }
-            },
-            "Metadata": {}
+                },
+                "Tags": [
+                    {
+                        "Key": "Product",
+                        "Value": {
+                            "Ref": "product"
+                        }
+                    },
+                    {
+                        "Key": "Environment",
+                        "Value": {
+                            "Ref": "environment"
+                        }
+                    },
+                    {
+                        "Key": "Stack",
+                        "Value": {
+                            "Ref": "AWS::StackName"
+                        }
+                    }
+                ]
+            }
         }
     },
     "Parameters": {

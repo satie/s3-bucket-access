@@ -5,21 +5,22 @@
 * Secure access and secret keys storage
 * Separate policies for read and write
 * Credential rotation
-* Additional access restrictions based on DC IP or DX VIF IP
-* Monitoring
+* Encryption at rest & in transit
+* Additional access restrictions based on Heroku IP or underlying AWS account
+* Logging & monitoring
 
 ### Scenarios
 #### Scenario 1 
 Bucket level policies for separate read and write users.
 
 #### Scenario 2
-* Separate IAM roles for read and write
-* Allow approved users to assume required role
+* Separate managed policies for read and write
+* Separate read and write users with respective managed policies assigned to them.
 
 #### Scenario 3
-* Access limited to RH account
+* Scenario #2 w/ access limited to RH via account-to-account access
 
 ### Setup
 * Create IAM users
 * Create bucket
-* Create IAM roles and bucket policy
+* Create IAM policy and roles
