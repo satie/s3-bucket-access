@@ -264,7 +264,27 @@
                             }
                         }
                     ]
-                }
+                },
+                "Tags": [
+                    {
+                        "Key": "Product",
+                        "Value": {
+                            "Ref": "product"
+                        }
+                    },
+                    {
+                        "Key": "Environment",
+                        "Value": {
+                            "Ref": "environment"
+                        }
+                    },
+                    {
+                        "Key": "Stack",
+                        "Value": {
+                            "Ref": "AWS::StackName"
+                        }
+                    }
+                ]
             }
         },
         "ReadWriteSecret": {
@@ -296,7 +316,27 @@
                             }
                         }
                     ]
-                }
+                },
+                "Tags": [
+                    {
+                        "Key": "Product",
+                        "Value": {
+                            "Ref": "product"
+                        }
+                    },
+                    {
+                        "Key": "Environment",
+                        "Value": {
+                            "Ref": "environment"
+                        }
+                    },
+                    {
+                        "Key": "Stack",
+                        "Value": {
+                            "Ref": "AWS::StackName"
+                        }
+                    }
+                ]
             }
         }
     },
@@ -316,15 +356,6 @@
                 "production"
             ],
             "Description": "Deployment environment"
-        },
-        "region": {
-            "Type": "String",
-            "Default": "us-east-1",
-            "AllowedValues": [
-                "us-east-1",
-                "us-east-2"
-            ],
-            "Description": "Deployment region"
         }
     },
     "Outputs": {
