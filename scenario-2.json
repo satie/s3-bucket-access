@@ -234,6 +234,70 @@
                 ]
             },
             "Metadata": {}
+        },
+        "ReadOnlySecret": {
+            "Type": "AWS::SecretsManager::Secret",
+            "Properties": {
+                "Name": {
+                    "Fn::Sub": [
+                        "${BucketName}-ReadOnly-Secret",
+                        {
+                            "BucketName": {
+                                "Ref": "S3Bucket"
+                            }
+                        }
+                    ]
+                },
+                "Description": "Access and secret keys for read-only user",
+                "SecretString": {
+                    "Fn::Sub": [
+                        "{\"ACCESS_KEY\": \"${AccessKey}\", \"SECRET_ACCESS_KEY\": \"${SecretAccessKey}\"}",
+                        {
+                            "AccessKey": {
+                                "Ref": "BucketReadOnlyUserKey"
+                            },
+                            "SecretAccessKey": {
+                                "Fn::GetAtt": [
+                                    "BucketReadOnlyUserKey",
+                                    "SecretAccessKey"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "ReadWriteSecret": {
+            "Type": "AWS::SecretsManager::Secret",
+            "Properties": {
+                "Name": {
+                    "Fn::Sub": [
+                        "${BucketName}-ReadWrite-Secret",
+                        {
+                            "BucketName": {
+                                "Ref": "S3Bucket"
+                            }
+                        }
+                    ]
+                },
+                "Description": "Access and secret keys for read-write user",
+                "SecretString": {
+                    "Fn::Sub": [
+                        "{\"ACCESS_KEY\": \"${AccessKey}\", \"SECRET_ACCESS_KEY\": \"${SecretAccessKey}\"}",
+                        {
+                            "AccessKey": {
+                                "Ref": "BucketReadWriteUserKey"
+                            },
+                            "SecretAccessKey": {
+                                "Fn::GetAtt": [
+                                    "BucketReadWriteUserKey",
+                                    "SecretAccessKey"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
         }
     },
     "Parameters": {
@@ -282,34 +346,16 @@
                 "Ref": "S3ReadWriteGroup"
             }
         },
-        "ReadOnlyUserAccessKey": {
-            "Description": "Access Key for user with read-only permissions",
+        "ReadOnlyUserSecret": {
+            "Description": "Secrets Manager secret with IAM credentials for read-only user",
             "Value": {
-                "Ref": "BucketReadOnlyUserKey"
+                "Ref": "ReadOnlySecret"
             }
-        },
-        "ReadOnlyUserSecretKey": {
-            "Description": "Secret Key for user with read-only permissions",
+        },        
+        "ReadWriteUserSecret": {
+            "Description": "Secrets Manager secret with IAM credentials for read-write user",
             "Value": {
-                "Fn::GetAtt": [
-                    "BucketReadOnlyUserKey",
-                    "SecretAccessKey"
-                ]
-            }
-        },
-        "ReadWriteUserAccessKey": {
-            "Description": "Access Key for user with read-write permissions",
-            "Value": {
-                "Ref": "BucketReadWriteUserKey"
-            }
-        },
-        "ReadWriteUserSecretKey": {
-            "Description": "Secret Key for user with read-only permissions",
-            "Value": {
-                "Fn::GetAtt": [
-                    "BucketReadWriteUserKey",
-                    "SecretAccessKey"
-                ]
+                "Ref": "ReadWriteSecret"
             }
         }
     }
