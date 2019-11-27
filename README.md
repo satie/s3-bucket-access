@@ -12,8 +12,8 @@
 
 The [cloudformation template](./cfn-template.json) creates the following resources 
 
-* Creates separate groups for read and write permissions
-* Creates users with read and write groups assigned to them
+* Separate groups for read and write permissions
+* Users with read and write groups assigned to them
 * IAM keys for users are stored in secrets manager
 
 It can take two parameters
