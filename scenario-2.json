@@ -40,12 +40,12 @@
             },
             "Metadata": {}
         },
-        "S3ReadOnlyPolicy": {
-            "Type": "AWS::IAM::ManagedPolicy",
+        "S3ReadOnlyGroup": {
+            "Type": "AWS::IAM::Group",
             "Properties": {
-                "ManagedPolicyName": {
+                "GroupName": {
                     "Fn::Sub": [
-                        "${BucketName}-ReadOnly",
+                        "${BucketName}-ReadOnly-Group",
                         {
                             "BucketName": {
                                 "Ref": "S3Bucket"
@@ -53,44 +53,58 @@
                         }
                     ]
                 },
-                "PolicyDocument": {
-                    "Version": "2012-10-17",
-                    "Statement": {
-                        "Action": [
-                            "s3:ListBucket"
-                        ],
-                        "Effect": "Allow",
-                        "Resource": [
-                            {
-                                "Fn::GetAtt": [
-                                    "S3Bucket",
-                                    "Arn"
-                                ]
-                            },
-                            {
-                                "Fn::Sub": [
-                                    "${BucketArn}/*",
+                "Policies": [
+                    {
+                        "PolicyName": {
+                            "Fn::Sub": [
+                                "${BucketName}-ReadOnly-Policy",
+                                {
+                                    "BucketName": {
+                                        "Ref": "S3Bucket"
+                                    }
+                                }
+                            ]
+                        },
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": {
+                                "Action": [
+                                    "s3:ListBucket"
+                                ],
+                                "Effect": "Allow",
+                                "Resource": [
                                     {
-                                        "BucketArn": {
-                                            "Fn::GetAtt": [
-                                                "S3Bucket",
-                                                "Arn"
-                                            ]
-                                        }
+                                        "Fn::GetAtt": [
+                                            "S3Bucket",
+                                            "Arn"
+                                        ]
+                                    },
+                                    {
+                                        "Fn::Sub": [
+                                            "${BucketArn}/*",
+                                            {
+                                                "BucketArn": {
+                                                    "Fn::GetAtt": [
+                                                        "S3Bucket",
+                                                        "Arn"
+                                                    ]
+                                                }
+                                            }
+                                        ]
                                     }
                                 ]
                             }
-                        ]
+                        }
                     }
-                }
+                ]                
             }
         },
-        "S3ReadWritePolicy": {
-            "Type": "AWS::IAM::ManagedPolicy",
+        "S3ReadWriteGroup": {
+            "Type": "AWS::IAM::Group",
             "Properties": {
-                "ManagedPolicyName": {
+                "GroupName": {
                     "Fn::Sub": [
-                        "${BucketName}-ReadWrite",
+                        "${BucketName}-ReadWrite-Group",
                         {
                             "BucketName": {
                                 "Ref": "S3Bucket"
@@ -98,37 +112,51 @@
                         }
                     ]
                 },
-                "PolicyDocument": {
-                    "Version": "2012-10-17",
-                    "Statement": {
-                        "Action": [
-                            "s3:ListBucket",
-                            "s3:PutObject"
-                        ],
-                        "Effect": "Allow",
-                        "Resource": [
-                            {
-                                "Fn::GetAtt": [
-                                    "S3Bucket",
-                                    "Arn"
-                                ]
-                            },
-                            {
-                                "Fn::Sub": [
-                                    "${BucketArn}/*",
+                "Policies": [
+                    {
+                        "PolicyName": {
+                            "Fn::Sub": [
+                                "${BucketName}-ReadWrite-Policy",
+                                {
+                                    "BucketName": {
+                                        "Ref": "S3Bucket"
+                                    }
+                                }
+                            ]
+                        },
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": {
+                                "Action": [
+                                    "s3:ListBucket",
+                                    "s3:PutObject"
+                                ],
+                                "Effect": "Allow",
+                                "Resource": [
                                     {
-                                        "BucketArn": {
-                                            "Fn::GetAtt": [
-                                                "S3Bucket",
-                                                "Arn"
-                                            ]
-                                        }
+                                        "Fn::GetAtt": [
+                                            "S3Bucket",
+                                            "Arn"
+                                        ]
+                                    },
+                                    {
+                                        "Fn::Sub": [
+                                            "${BucketArn}/*",
+                                            {
+                                                "BucketArn": {
+                                                    "Fn::GetAtt": [
+                                                        "S3Bucket",
+                                                        "Arn"
+                                                    ]
+                                                }
+                                            }
+                                        ]
                                     }
                                 ]
                             }
-                        ]
-                    }
-                }
+                        }
+                    }                    
+                ]                
             }
         },
         "BucketReadOnlyUserKey": {
@@ -143,8 +171,8 @@
         "BucketReadOnlyUser": {
             "Type": "AWS::IAM::User",
             "Properties": {
-                "ManagedPolicyArns" : [
-                    { "Ref": "S3ReadOnlyPolicy" }
+                "Groups" : [
+                    { "Ref": "S3ReadOnlyGroup" }
                 ],
                 "Tags": [
                     {
@@ -181,8 +209,8 @@
         "BucketReadWriteUser": {
             "Type": "AWS::IAM::User",
             "Properties": {
-                "ManagedPolicyArns": [
-                    { "Ref": "S3ReadWritePolicy" }
+                "Groups": [
+                    { "Ref": "S3ReadWriteGroup" }
                 ],
                 "Tags": [
                     {
@@ -242,16 +270,16 @@
                 "Ref": "S3Bucket"
             }
         },
-        "S3ReadOnlyPolicy": {
-            "Description": "Read-only managed policy for S3 bucket",
+        "S3ReadOnlyGroup": {
+            "Description": "Read-only group for S3 bucket",
             "Value": {
-                "Ref": "S3ReadOnlyPolicy"
+                "Ref": "S3ReadOnlyGroup"
             }
         },
-        "S3ReadWritePolicy": {
-            "Description": "Read-write managed policy for S3 bucket",
+        "S3ReadWriteGroup": {
+            "Description": "Read-write managed group for S3 bucket",
             "Value": {
-                "Ref": "S3ReadWritePolicy"
+                "Ref": "S3ReadWriteGroup"
             }
         },
         "ReadOnlyUserAccessKey": {
