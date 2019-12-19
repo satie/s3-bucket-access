@@ -171,6 +171,16 @@
         "BucketReadOnlyUser": {
             "Type": "AWS::IAM::User",
             "Properties": {
+                "UserName": {
+                    "Fn::Sub": [
+                        "${BucketName}-ReadyOnly-User",
+                        {
+                            "BucketName": {
+                                "Ref": "S3Bucket"
+                            }
+                        }
+                    ]
+                },
                 "Groups" : [
                     { "Ref": "S3ReadOnlyGroup" }
                 ],
@@ -209,6 +219,16 @@
         "BucketReadWriteUser": {
             "Type": "AWS::IAM::User",
             "Properties": {
+                "UserName": {
+                    "Fn::Sub": [
+                        "${BucketName}-ReadWrite-User",
+                        {
+                            "BucketName": {
+                                "Ref": "S3Bucket"
+                            }
+                        }
+                    ]
+                },
                 "Groups": [
                     { "Ref": "S3ReadWriteGroup" }
                 ],
@@ -251,8 +271,14 @@
                 "Description": "Access and secret keys for read-only user",
                 "SecretString": {
                     "Fn::Sub": [
-                        "{\"ACCESS_KEY\": \"${AccessKey}\", \"SECRET_ACCESS_KEY\": \"${SecretAccessKey}\"}",
+                        "{\"UserID\": \"${ReadOnlyUserArn}\", \"ACCESS_KEY_ID\": \"${AccessKey}\", \"SECRET_ACCESS_KEY\": \"${SecretAccessKey}\"}",
                         {
+                            "ReadOnlyUserArn": {
+                                "Fn::GetAtt": [
+                                    "BucketReadOnlyUser",
+                                    "Arn"
+                                ]
+                            },
                             "AccessKey": {
                                 "Ref": "BucketReadOnlyUserKey"
                             },
@@ -303,8 +329,14 @@
                 "Description": "Access and secret keys for read-write user",
                 "SecretString": {
                     "Fn::Sub": [
-                        "{\"ACCESS_KEY\": \"${AccessKey}\", \"SECRET_ACCESS_KEY\": \"${SecretAccessKey}\"}",
+                        "{\"UserID\": \"${ReadWriteUserArn}\", \"ACCESS_KEY_ID\": \"${AccessKey}\", \"SECRET_ACCESS_KEY\": \"${SecretAccessKey}\"}",
                         {
+                            "ReadWriteUserArn": {
+                                "Fn::GetAtt": [
+                                    "BucketReadWriteUser",
+                                    "Arn"
+                                ]
+                            },
                             "AccessKey": {
                                 "Ref": "BucketReadWriteUserKey"
                             },
