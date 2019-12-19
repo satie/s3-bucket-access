@@ -67,6 +67,16 @@ $ aws cloudformation describe-stacks --stack atpco-routehappy
                     "Description": "Read-write managed group for S3 bucket"
                 },
                 {
+                    "OutputKey": "ReadOnlyUserArn",
+                    "OutputValue": "arn:aws:iam::123456789012:user/atpco-routehappy-s3.satie.io-dev-ReadOnly",
+                    "Description": "Read-only user"
+                },
+                {
+                    "OutputKey": "ReadWriteUserArn",
+                    "OutputValue": "arn:aws:iam::123456789012:user/atpco-routehappy-s3.satie.io-dev-ReadWrite",
+                    "Description": "Read-write user"
+                },
+                {
                     "OutputKey": "ReadOnlyUserSecret",
                     "OutputValue": "arn:aws:secretsmanager:us-east-1:123456789012:secret:atpco-routehappy-s3.satie.io-dev-ReadOnly-Secret-vjxJbd",
                     "Description": "Secrets Manager secret with IAM credentials for read-only user"
@@ -105,7 +115,7 @@ $ aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:us-east
     "ARN": "arn:aws:secretsmanager:us-east-1:123456789012:secret:atpco-routehappy-s3.satie.io-dev-ReadWrite-Secret-fzEYjZ",
     "Name": "atpco-routehappy-s3.satie.io-dev-ReadWrite-Secret",
     "VersionId": "cc75e0d3-bd15-44bd-811c-c9f0bc75e9c3",
-    "SecretString": "{\"ACCESS_KEY\": \"XXXXWQMWYYYYJMBGZZZZ\", \"SECRET_ACCESS_KEY\": \"5IkSQKX3IKMk1234BbwOzGwe5678gPSKFUloImHq\"}",
+    "SecretString": "{\"UserID\": \"arn:aws:iam::123456789012:user/atpco-routehappy-s3.satie.io-dev-ReadOnly\", \"ACCESS_KEY\": \"XXXXWQMWYYYYJMBGZZZZ\", \"SECRET_ACCESS_KEY\": \"5IkSQKX3IKMk1234BbwOzGwe5678gPSKFUloImHq\"}",
     "VersionStages": [
         "AWSCURRENT"
     ],
@@ -117,7 +127,7 @@ If you have [`jq`](https://stedolan.github.io/jq/) installed, you can filter on 
 
 ```shell
 $ aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:us-east-1:123456789012:secret:atpco-routehappy-s3.satie.io-dev-ReadWrite-Secret-fzEYjZ | jq '.SecretString'
-"{\"ACCESS_KEY\": \"XXXXWQMWYYYYJMBGZZZZ\", \"SECRET_ACCESS_KEY\": \"5IkSQKX3IKMk1234BbwOzGwe5678gPSKFUloImHq\"}"
+"{\"UserID\": \"arn:aws:iam::123456789012:user/atpco-routehappy-s3.satie.io-dev-ReadOnly\", \"ACCESS_KEY\": \"XXXXWQMWYYYYJMBGZZZZ\", \"SECRET_ACCESS_KEY\": \"5IkSQKX3IKMk1234BbwOzGwe5678gPSKFUloImHq\"}"
 ```
 
 ### TODO

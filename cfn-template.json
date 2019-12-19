@@ -409,6 +409,24 @@
                 "Ref": "S3ReadWriteGroup"
             }
         },
+        "ReadOnlyUserArn": {
+            "Description": "Read-only user",
+            "Value": {
+                "Fn::GetAtt": [
+                    "BucketReadOnlyUser",
+                    "Arn"
+                ]
+            }
+        },
+        "ReadWriteUserArn": {
+            "Description": "Read-write user",
+            "Value": {
+                "Fn::GetAtt": [
+                    "BucketReadWriteUser",
+                    "Arn"
+                ]
+            }
+        },
         "ReadOnlyUserSecret": {
             "Description": "Secrets Manager secret with IAM credentials for read-only user",
             "Value": {
